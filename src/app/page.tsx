@@ -38,7 +38,7 @@ export default function HomePage() {
           <Link href="/submit">
             <Button className="gap-1.5">
               <PlusCircle className="h-4 w-4" />
-              Подать заявку
+              Заявить мероприятие
             </Button>
           </Link>
         </div>

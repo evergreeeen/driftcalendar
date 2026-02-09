@@ -10,7 +10,7 @@ export async function GET() {
   seedDatabase();
   const db = getDb();
   const events = db.prepare(
-    "SELECT * FROM events WHERE start_date >= date('now') ORDER BY start_date ASC"
+    'SELECT * FROM events ORDER BY start_date ASC'
   ).all() as Event[];
 
   const ical = generateIcalFeed(events);
@@ -18,7 +18,7 @@ export async function GET() {
   return new NextResponse(ical, {
     headers: {
       'Content-Type': 'text/calendar; charset=utf-8',
-      'Content-Disposition': 'attachment; filename="drift-events.ics"',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
     },
   });
 }

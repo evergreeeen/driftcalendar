@@ -3,14 +3,29 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Calendar, List, PlusCircle, Download, Flame } from 'lucide-react';
+import { Calendar, List, PlusCircle, CalendarPlus, Flame } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const links = [
   { href: '/', label: 'События', icon: List },
   { href: '/calendar', label: 'Календарь', icon: Calendar },
-  { href: '/submit', label: 'Подать заявку', icon: PlusCircle },
+  { href: '/submit', label: 'Заявить мероприятие', icon: PlusCircle },
 ];
+
+function SubscribeButton() {
+  const handleSubscribe = () => {
+    const baseUrl = window.location.origin;
+    const webcalUrl = baseUrl.replace(/^https?:\/\//, 'webcal://') + '/feed';
+    window.location.href = webcalUrl;
+  };
+
+  return (
+    <Button variant="outline" size="sm" onClick={handleSubscribe} className="gap-1.5">
+      <CalendarPlus className="h-4 w-4" />
+      <span className="hidden sm:inline">Подписаться</span>
+    </Button>
+  );
+}
 
 export function Nav() {
   const pathname = usePathname();
@@ -42,12 +57,7 @@ export function Nav() {
           ))}
         </nav>
         <div className="ml-auto flex items-center gap-2">
-          <Link href="/feed">
-            <Button variant="outline" size="sm" className="gap-1.5">
-              <Download className="h-4 w-4" />
-              <span className="hidden sm:inline">iCal</span>
-            </Button>
-          </Link>
+          <SubscribeButton />
         </div>
       </div>
     </header>

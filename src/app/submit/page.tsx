@@ -68,7 +68,7 @@ export default function SubmitPage() {
   return (
     <div className="max-w-lg mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Подать заявку</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Заявить мероприятие</h1>
         <p className="text-muted-foreground">
           Предложите мероприятие для добавления в календарь
         </p>

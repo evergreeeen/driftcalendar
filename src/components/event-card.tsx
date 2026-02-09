@@ -42,6 +42,11 @@ export function EventCard({ event }: { event: Event }) {
                 {event.location}
               </span>
             )}
+            {event.city && (
+              <span className="text-muted-foreground/80">
+                {event.city}
+              </span>
+            )}
           </div>
           {event.address && (
             <p className="text-xs text-muted-foreground/70">{event.address}</p>

@@ -4,6 +4,7 @@ import type { EventSeries } from '@/types';
 interface SeedEvent {
   title: string;
   location: string;
+  city: string;
   address: string;
   lat: number;
   lng: number;
@@ -12,16 +13,16 @@ interface SeedEvent {
   end_date: string;
 }
 
-// Venues
-const CTVS = { location: 'ЦТВС «Москва»', address: 'Москва, Проектируемый проезд 4386, д. 1, р-н Печатники', lat: 55.65166, lng: 37.68895 };
-const MYACHKOVO = { location: 'ADM Raceway, Мячково', address: 'МО, Раменский р-н, д. Верхнее Мячково, аэродром', lat: 55.5666, lng: 37.9954 };
-const IGORA = { location: 'Igora Drive, СПБ', address: 'Ленинградская обл., Приозерское ш., д. 3, к. 2', lat: 60.5144, lng: 30.1942 };
-const MRW = { location: 'Moscow Raceway', address: 'МО, Волоколамский р-н, д. Шелудьково, 39', lat: 55.9955, lng: 36.2700 };
-const ATRON = { location: 'ATRON International Circuit, Рязань', address: 'Рязанская обл., д. Секиотово, ул. Мирная, 2', lat: 54.5891, lng: 39.6198 };
-const KAZAN = { location: 'KazanRing Canyon, Казань', address: 'Татарстан, трасса М7, 817 км, Высокогорский р-н', lat: 55.8664, lng: 49.2597 };
-const NRING = { location: 'NRing, Нижний Новгород', address: 'Нижегородская обл., Богородский р-н, АСК НН Кольцо', lat: 56.123, lng: 43.598 };
-const REDRING = { location: 'Красное Кольцо, Красноярск', address: 'Красноярский край, Емельяновский р-н, трасса Р255', lat: 56.1261, lng: 92.7397 };
-const ROSTOV = { location: 'Ростов Арена, Ростов-на-Дону', address: 'г. Ростов-на-Дону, ул. Левобережная, 2Б', lat: 47.2094, lng: 39.7378 };
+// Venues: location = track name, city = city/region
+const CTVS = { location: 'ЦТВС', city: 'Москва', address: 'Москва, Проектируемый проезд 4386, д. 1, р-н Печатники', lat: 55.65166, lng: 37.68895 };
+const MYACHKOVO = { location: 'ADM Raceway', city: 'Мячково', address: 'МО, Раменский р-н, д. Верхнее Мячково, аэродром', lat: 55.5666, lng: 37.9954 };
+const IGORA = { location: 'Igora Drive', city: 'Санкт-Петербург', address: 'Ленинградская обл., Приозерское ш., д. 3, к. 2', lat: 60.5144, lng: 30.1942 };
+const MRW = { location: 'Moscow Raceway', city: 'Волоколамск', address: 'МО, Волоколамский р-н, д. Шелудьково, 39', lat: 55.9955, lng: 36.2700 };
+const ATRON = { location: 'ATRON International Circuit', city: 'Рязань', address: 'Рязанская обл., д. Секиотово, ул. Мирная, 2', lat: 54.5891, lng: 39.6198 };
+const KAZAN = { location: 'KazanRing Canyon', city: 'Казань', address: 'Татарстан, трасса М7, 817 км, Высокогорский р-н', lat: 55.8664, lng: 49.2597 };
+const NRING = { location: 'NRing', city: 'Нижний Новгород', address: 'Нижегородская обл., Богородский р-н, АСК НН Кольцо', lat: 56.123, lng: 43.598 };
+const REDRING = { location: 'Красное Кольцо', city: 'Красноярск', address: 'Красноярский край, Емельяновский р-н, трасса Р255', lat: 56.1261, lng: 92.7397 };
+const ROSTOV = { location: 'Ростов Арена', city: 'Ростов-на-Дону', address: 'г. Ростов-на-Дону, ул. Левобережная, 2Б', lat: 47.2094, lng: 39.7378 };
 
 const events: SeedEvent[] = [
   // Апрель
@@ -47,7 +48,7 @@ const events: SeedEvent[] = [
   // Август
   { title: 'RDS GP — Этап 5', series: 'rds_gp', ...REDRING, start_date: '2026-08-01T09:00:00', end_date: '2026-08-02T20:00:00' },
   { title: '3-й этап АДМ дрифт контест', series: 'adm', ...MYACHKOVO, start_date: '2026-08-07T09:00:00', end_date: '2026-08-08T20:00:00' },
-  { title: '5 этап RDS Open', series: 'rds_open', location: 'Уточняется', address: 'Уточняется', lat: 55.7558, lng: 37.6173, start_date: '2026-08-15T09:00:00', end_date: '2026-08-16T20:00:00' },
+  { title: '5 этап RDS Open', series: 'rds_open', location: 'Уточняется', city: 'Уточняется', address: 'Уточняется', lat: 55.7558, lng: 37.6173, start_date: '2026-08-15T09:00:00', end_date: '2026-08-16T20:00:00' },
   { title: '5 этап САТЮКАП', series: 'satyukap', ...ATRON, start_date: '2026-08-22T09:00:00', end_date: '2026-08-23T20:00:00' },
   { title: 'RDS FEST', series: 'rds_fest', ...IGORA, start_date: '2026-08-22T09:00:00', end_date: '2026-08-23T20:00:00' },
   { title: 'RDS GP — Этап 6', series: 'rds_gp', ...MRW, start_date: '2026-08-29T09:00:00', end_date: '2026-08-30T20:00:00' },
@@ -65,8 +66,8 @@ export function seedDatabase() {
 
   if (count.count === 0) {
     const insert = db.prepare(`
-      INSERT INTO events (title, description, location, address, lat, lng, series, start_date, end_date)
-      VALUES (@title, @description, @location, @address, @lat, @lng, @series, @start_date, @end_date)
+      INSERT INTO events (title, description, location, city, address, lat, lng, series, start_date, end_date)
+      VALUES (@title, @description, @location, @city, @address, @lat, @lng, @series, @start_date, @end_date)
     `);
 
     const insertMany = db.transaction((evts: SeedEvent[]) => {
@@ -75,6 +76,7 @@ export function seedDatabase() {
           title: evt.title,
           description: null,
           location: evt.location,
+          city: evt.city,
           address: evt.address,
           lat: evt.lat,
           lng: evt.lng,

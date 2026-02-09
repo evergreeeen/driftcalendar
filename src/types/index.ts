@@ -5,6 +5,7 @@ export interface Event {
   title: string;
   description: string | null;
   location: string | null;
+  city: string | null;
   address: string | null;
   lat: number | null;
   lng: number | null;

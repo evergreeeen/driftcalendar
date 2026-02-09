@@ -15,6 +15,7 @@ interface EventFormData {
   title: string;
   description: string;
   location: string;
+  city: string;
   address: string;
   lat: string;
   lng: string;
@@ -28,6 +29,7 @@ const emptyForm: EventFormData = {
   title: '',
   description: '',
   location: '',
+  city: '',
   address: '',
   lat: '',
   lng: '',
@@ -52,6 +54,7 @@ export function AdminEventsClient({ initialEvents }: { initialEvents: Event[] })
       title: event.title,
       description: event.description || '',
       location: event.location || '',
+      city: event.city || '',
       address: event.address || '',
       lat: event.lat?.toString() || '',
       lng: event.lng?.toString() || '',
@@ -153,8 +156,12 @@ export function AdminEventsClient({ initialEvents }: { initialEvents: Event[] })
               </select>
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium">Место</label>
-              <Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="Название площадки" />
+              <label className="text-sm font-medium">Трасса</label>
+              <Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="Название трассы/площадки" />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Город</label>
+              <Input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} placeholder="Москва" />
             </div>
             <div className="space-y-2 sm:col-span-2">
               <label className="text-sm font-medium">Адрес</label>
@@ -199,10 +206,11 @@ export function AdminEventsClient({ initialEvents }: { initialEvents: Event[] })
       )}
 
       <div className="rounded-lg border overflow-hidden">
-        <div className="grid grid-cols-[auto_1fr_auto_auto_auto] gap-3 p-3 text-xs font-medium text-muted-foreground border-b bg-muted/50">
+        <div className="grid grid-cols-[auto_1fr_auto_auto_auto_auto] gap-3 p-3 text-xs font-medium text-muted-foreground border-b bg-muted/50">
           <span>Серия</span>
           <span>Мероприятие</span>
-          <span>Место</span>
+          <span>Трасса</span>
+          <span>Город</span>
           <span>Даты</span>
           <span></span>
         </div>
@@ -211,15 +219,18 @@ export function AdminEventsClient({ initialEvents }: { initialEvents: Event[] })
           return (
             <div
               key={event.id}
-              className="grid grid-cols-[auto_1fr_auto_auto_auto] gap-3 p-3 text-sm items-center border-b last:border-b-0 hover:bg-accent/50"
+              className="grid grid-cols-[auto_1fr_auto_auto_auto_auto] gap-3 p-3 text-sm items-center border-b last:border-b-0 hover:bg-accent/50"
             >
               <span className={`rounded-full border px-2 py-0.5 text-[10px] font-medium whitespace-nowrap ${cfg.color}`}>
                 {cfg.label}
               </span>
               <span className="font-medium truncate">{event.title}</span>
+              <span className="text-muted-foreground text-xs truncate">
+                {event.location || '—'}
+              </span>
               <span className="text-muted-foreground flex items-center gap-1 text-xs">
                 <MapPin className="h-3 w-3" />
-                {event.location || '—'}
+                {event.city || '—'}
               </span>
               <span className="text-muted-foreground flex items-center gap-1 whitespace-nowrap text-xs">
                 <Calendar className="h-3 w-3" />

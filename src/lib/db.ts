@@ -23,6 +23,7 @@ function getDb(): Database.Database {
         title       TEXT NOT NULL,
         description TEXT,
         location    TEXT,
+        city        TEXT,
         address     TEXT,
         lat         REAL,
         lng         REAL,
@@ -52,6 +53,7 @@ function getDb(): Database.Database {
 
     // Migration: add columns if they don't exist (for existing DBs)
     try { db.exec('ALTER TABLE events ADD COLUMN address TEXT'); } catch {}
+    try { db.exec('ALTER TABLE events ADD COLUMN city TEXT'); } catch {}
     try { db.exec('ALTER TABLE events ADD COLUMN lat REAL'); } catch {}
     try { db.exec('ALTER TABLE events ADD COLUMN lng REAL'); } catch {}
     try { db.exec('ALTER TABLE events ADD COLUMN series TEXT DEFAULT \'other\''); } catch {}

@@ -25,10 +25,7 @@ export function EventsList({ events }: { events: Event[] }) {
   const cities = useMemo(() => {
     const set = new Set<string>();
     events.forEach((e) => {
-      if (e.location) {
-        const city = e.location.split(',').pop()?.trim() || e.location;
-        set.add(city);
-      }
+      if (e.city) set.add(e.city);
     });
     return Array.from(set).sort();
   }, [events]);
@@ -39,10 +36,7 @@ export function EventsList({ events }: { events: Event[] }) {
       result = result.filter((e) => filterSeries.includes(e.series));
     }
     if (filterCities.length > 0) {
-      result = result.filter((e) => {
-        if (!e.location) return false;
-        return filterCities.some((city) => e.location!.includes(city));
-      });
+      result = result.filter((e) => e.city && filterCities.includes(e.city));
     }
     return result;
   }, [events, filterSeries, filterCities]);

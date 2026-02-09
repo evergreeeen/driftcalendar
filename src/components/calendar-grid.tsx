@@ -33,10 +33,7 @@ export function CalendarGrid({ events }: { events: Event[] }) {
   const cities = useMemo(() => {
     const set = new Set<string>();
     events.forEach((e) => {
-      if (e.location) {
-        const city = e.location.split(',').pop()?.trim() || e.location;
-        set.add(city);
-      }
+      if (e.city) set.add(e.city);
     });
     return Array.from(set).sort();
   }, [events]);
@@ -47,10 +44,7 @@ export function CalendarGrid({ events }: { events: Event[] }) {
       result = result.filter((e) => filterSeries.includes(e.series));
     }
     if (filterCities.length > 0) {
-      result = result.filter((e) => {
-        if (!e.location) return false;
-        return filterCities.some((city) => e.location!.includes(city));
-      });
+      result = result.filter((e) => e.city && filterCities.includes(e.city));
     }
     return result;
   }, [events, filterSeries, filterCities]);
@@ -141,7 +135,7 @@ export function CalendarGrid({ events }: { events: Event[] }) {
                       <div
                         key={event.id}
                         className={`rounded px-1 py-px text-[9px] leading-tight font-medium truncate ${cfg.dot} text-white`}
-                        title={`${event.title} — ${event.location}`}
+                        title={`${event.title} — ${[event.location, event.city].filter(Boolean).join(', ')}`}
                       >
                         <span className="hidden sm:inline">{event.title}</span>
                         <span className="sm:hidden">{(SERIES_CONFIG[event.series] || SERIES_CONFIG.other).label}</span>
@@ -177,10 +171,10 @@ export function CalendarGrid({ events }: { events: Event[] }) {
                       {cfg.label}
                     </span>
                   </div>
-                  {event.location && (
+                  {(event.location || event.city) && (
                     <p className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
                       <MapPin className="h-3 w-3" />
-                      {event.location}
+                      {[event.location, event.city].filter(Boolean).join(' · ')}
                     </p>
                   )}
                   {event.address && (

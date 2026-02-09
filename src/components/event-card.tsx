@@ -44,7 +44,7 @@ export function EventCard({ event }: { event: Event }) {
             )}
             {event.city && (
               <span className="text-muted-foreground/80">
-                {event.city}
+                {[event.city, event.country].filter(Boolean).join(', ')}
               </span>
             )}
           </div>

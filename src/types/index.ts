@@ -1,4 +1,4 @@
-export type EventSeries = 'rds_gp' | 'rds_open' | 'rds_fest' | 'satyukap' | 'adm' | 'driftexpo' | 'supercup' | 'royal_drift' | 'd1gp' | 'drift_masters' | 'formula_drift' | 'other';
+export type EventSeries = 'rds' | 'satyukap' | 'adm' | 'driftexpo' | 'supercup' | 'royal_drift' | 'd1gp' | 'drift_masters' | 'formula_drift' | 'other';
 
 export interface Event {
   id: number;
@@ -6,6 +6,7 @@ export interface Event {
   description: string | null;
   location: string | null;
   city: string | null;
+  country: string | null;
   address: string | null;
   lat: number | null;
   lng: number | null;
@@ -33,9 +34,7 @@ export interface Submission {
 }
 
 export const SERIES_CONFIG: Record<EventSeries, { label: string; color: string; dot: string }> = {
-  rds_gp: { label: 'RDS GP', color: 'bg-red-500/20 text-red-400 border-red-500/30', dot: 'bg-red-500' },
-  rds_open: { label: 'RDS Open', color: 'bg-orange-500/20 text-orange-400 border-orange-500/30', dot: 'bg-orange-500' },
-  rds_fest: { label: 'RDS FEST', color: 'bg-pink-500/20 text-pink-400 border-pink-500/30', dot: 'bg-pink-500' },
+  rds: { label: 'RDS', color: 'bg-red-500/20 text-red-400 border-red-500/30', dot: 'bg-red-500' },
   satyukap: { label: 'САТЮКАП', color: 'bg-blue-500/20 text-blue-400 border-blue-500/30', dot: 'bg-blue-500' },
   adm: { label: 'АДМ', color: 'bg-green-500/20 text-green-400 border-green-500/30', dot: 'bg-green-500' },
   driftexpo: { label: 'ДРИФТЭКСПО', color: 'bg-purple-500/20 text-purple-400 border-purple-500/30', dot: 'bg-purple-500' },

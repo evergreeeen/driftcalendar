@@ -20,8 +20,17 @@ function groupEventsByMonth(events: Event[]): Map<string, Event[]> {
 
 export function EventsList({ events }: { events: Event[] }) {
   const [filterSeries, setFilterSeries] = useState<EventSeries[]>([]);
+  const [filterCountries, setFilterCountries] = useState<string[]>([]);
   const [filterCities, setFilterCities] = useState<string[]>([]);
   const [filterTracks, setFilterTracks] = useState<string[]>([]);
+
+  const countries = useMemo(() => {
+    const set = new Set<string>();
+    events.forEach((e) => {
+      if (e.country) set.add(e.country);
+    });
+    return Array.from(set).sort();
+  }, [events]);
 
   const cities = useMemo(() => {
     const set = new Set<string>();
@@ -44,6 +53,9 @@ export function EventsList({ events }: { events: Event[] }) {
     if (filterSeries.length > 0) {
       result = result.filter((e) => filterSeries.includes(e.series));
     }
+    if (filterCountries.length > 0) {
+      result = result.filter((e) => e.country && filterCountries.includes(e.country));
+    }
     if (filterCities.length > 0) {
       result = result.filter((e) => e.city && filterCities.includes(e.city));
     }
@@ -51,7 +63,7 @@ export function EventsList({ events }: { events: Event[] }) {
       result = result.filter((e) => e.location && filterTracks.includes(e.location));
     }
     return result;
-  }, [events, filterSeries, filterCities, filterTracks]);
+  }, [events, filterSeries, filterCountries, filterCities, filterTracks]);
 
   const grouped = groupEventsByMonth(filtered);
 
@@ -83,6 +95,9 @@ export function EventsList({ events }: { events: Event[] }) {
           <EventFilters
             filterSeries={filterSeries}
             onSeriesChange={setFilterSeries}
+            filterCountries={filterCountries}
+            onCountriesChange={setFilterCountries}
+            countries={countries}
             filterCities={filterCities}
             onCitiesChange={setFilterCities}
             cities={cities}

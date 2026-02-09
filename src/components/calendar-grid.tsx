@@ -28,8 +28,17 @@ export function CalendarGrid({ events }: { events: Event[] }) {
   const [currentDate, setCurrentDate] = useState(new Date(2026, 3, 1));
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
   const [filterSeries, setFilterSeries] = useState<EventSeries[]>([]);
+  const [filterCountries, setFilterCountries] = useState<string[]>([]);
   const [filterCities, setFilterCities] = useState<string[]>([]);
   const [filterTracks, setFilterTracks] = useState<string[]>([]);
+
+  const countries = useMemo(() => {
+    const set = new Set<string>();
+    events.forEach((e) => {
+      if (e.country) set.add(e.country);
+    });
+    return Array.from(set).sort();
+  }, [events]);
 
   const cities = useMemo(() => {
     const set = new Set<string>();
@@ -52,6 +61,9 @@ export function CalendarGrid({ events }: { events: Event[] }) {
     if (filterSeries.length > 0) {
       result = result.filter((e) => filterSeries.includes(e.series));
     }
+    if (filterCountries.length > 0) {
+      result = result.filter((e) => e.country && filterCountries.includes(e.country));
+    }
     if (filterCities.length > 0) {
       result = result.filter((e) => e.city && filterCities.includes(e.city));
     }
@@ -59,7 +71,7 @@ export function CalendarGrid({ events }: { events: Event[] }) {
       result = result.filter((e) => e.location && filterTracks.includes(e.location));
     }
     return result;
-  }, [events, filterSeries, filterCities, filterTracks]);
+  }, [events, filterSeries, filterCountries, filterCities, filterTracks]);
 
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
@@ -179,7 +191,7 @@ export function CalendarGrid({ events }: { events: Event[] }) {
                     {(event.location || event.city) && (
                       <p className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
                         <MapPin className="h-3 w-3" />
-                        {[event.location, event.city].filter(Boolean).join(' · ')}
+                        {[event.location, event.city, event.country].filter(Boolean).join(' · ')}
                       </p>
                     )}
                     {event.address && (
@@ -209,6 +221,9 @@ export function CalendarGrid({ events }: { events: Event[] }) {
           <EventFilters
             filterSeries={filterSeries}
             onSeriesChange={setFilterSeries}
+            filterCountries={filterCountries}
+            onCountriesChange={setFilterCountries}
+            countries={countries}
             filterCities={filterCities}
             onCitiesChange={setFilterCities}
             cities={cities}

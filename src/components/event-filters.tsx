@@ -2,13 +2,16 @@
 
 import { cn } from '@/lib/utils';
 import { SERIES_CONFIG, type EventSeries } from '@/types';
-import { MapPin, Filter, Flag } from 'lucide-react';
+import { MapPin, Filter, Flag, Globe } from 'lucide-react';
 
 const ALL_SERIES = Object.keys(SERIES_CONFIG) as EventSeries[];
 
 interface EventFiltersProps {
   filterSeries: EventSeries[];
   onSeriesChange: (series: EventSeries[]) => void;
+  filterCountries: string[];
+  onCountriesChange: (countries: string[]) => void;
+  countries: string[];
   filterCities: string[];
   onCitiesChange: (cities: string[]) => void;
   cities: string[];
@@ -20,6 +23,9 @@ interface EventFiltersProps {
 export function EventFilters({
   filterSeries,
   onSeriesChange,
+  filterCountries,
+  onCountriesChange,
+  countries,
   filterCities,
   onCitiesChange,
   cities,
@@ -28,6 +34,7 @@ export function EventFilters({
   tracks,
 }: EventFiltersProps) {
   const allSeriesSelected = filterSeries.length === 0;
+  const allCountriesSelected = filterCountries.length === 0;
   const allCitiesSelected = filterCities.length === 0;
   const allTracksSelected = filterTracks.length === 0;
 
@@ -36,6 +43,14 @@ export function EventFilters({
       onSeriesChange(filterSeries.filter((s) => s !== series));
     } else {
       onSeriesChange([...filterSeries, series]);
+    }
+  }
+
+  function toggleCountry(country: string) {
+    if (filterCountries.includes(country)) {
+      onCountriesChange(filterCountries.filter((c) => c !== country));
+    } else {
+      onCountriesChange([...filterCountries, country]);
     }
   }
 
@@ -90,6 +105,44 @@ export function EventFilters({
                 )}
               >
                 {config.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Country filter */}
+      <div className="space-y-2">
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
+          <Globe className="h-3 w-3" />
+          <span>Страна</span>
+        </div>
+        <div className="flex flex-wrap gap-1.5">
+          <button
+            onClick={() => onCountriesChange([])}
+            className={cn(
+              'rounded-full border px-2.5 py-1 text-xs font-medium transition-colors',
+              allCountriesSelected
+                ? 'border-primary/50 bg-primary/10 text-primary'
+                : 'border-border text-muted-foreground hover:bg-accent'
+            )}
+          >
+            Все
+          </button>
+          {countries.map((country) => {
+            const isActive = filterCountries.includes(country);
+            return (
+              <button
+                key={country}
+                onClick={() => toggleCountry(country)}
+                className={cn(
+                  'rounded-full border px-2.5 py-1 text-xs font-medium transition-colors',
+                  isActive
+                    ? 'border-primary/50 bg-primary/10 text-primary'
+                    : 'border-border text-muted-foreground hover:bg-accent'
+                )}
+              >
+                {country}
               </button>
             );
           })}

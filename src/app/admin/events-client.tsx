@@ -16,6 +16,7 @@ interface EventFormData {
   description: string;
   location: string;
   city: string;
+  country: string;
   address: string;
   lat: string;
   lng: string;
@@ -30,6 +31,7 @@ const emptyForm: EventFormData = {
   description: '',
   location: '',
   city: '',
+  country: '',
   address: '',
   lat: '',
   lng: '',
@@ -55,6 +57,7 @@ export function AdminEventsClient({ initialEvents }: { initialEvents: Event[] })
       description: event.description || '',
       location: event.location || '',
       city: event.city || '',
+      country: event.country || '',
       address: event.address || '',
       lat: event.lat?.toString() || '',
       lng: event.lng?.toString() || '',
@@ -163,6 +166,10 @@ export function AdminEventsClient({ initialEvents }: { initialEvents: Event[] })
               <label className="text-sm font-medium">Город</label>
               <Input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} placeholder="Москва" />
             </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Страна</label>
+              <Input value={form.country} onChange={(e) => setForm({ ...form, country: e.target.value })} placeholder="Россия" />
+            </div>
             <div className="space-y-2 sm:col-span-2">
               <label className="text-sm font-medium">Адрес</label>
               <Input value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} placeholder="Полный адрес" />
@@ -230,7 +237,7 @@ export function AdminEventsClient({ initialEvents }: { initialEvents: Event[] })
               </span>
               <span className="text-muted-foreground flex items-center gap-1 text-xs">
                 <MapPin className="h-3 w-3" />
-                {event.city || '—'}
+                {[event.city, event.country].filter(Boolean).join(', ') || '—'}
               </span>
               <span className="text-muted-foreground flex items-center gap-1 whitespace-nowrap text-xs">
                 <Calendar className="h-3 w-3" />

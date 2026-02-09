@@ -24,6 +24,7 @@ function getDb(): Database.Database {
         description TEXT,
         location    TEXT,
         city        TEXT,
+        country     TEXT,
         address     TEXT,
         lat         REAL,
         lng         REAL,
@@ -57,6 +58,7 @@ function getDb(): Database.Database {
     try { db.exec('ALTER TABLE events ADD COLUMN lat REAL'); } catch {}
     try { db.exec('ALTER TABLE events ADD COLUMN lng REAL'); } catch {}
     try { db.exec('ALTER TABLE events ADD COLUMN series TEXT DEFAULT \'other\''); } catch {}
+    try { db.exec('ALTER TABLE events ADD COLUMN country TEXT'); } catch {}
     try { db.exec('ALTER TABLE submissions ADD COLUMN address TEXT'); } catch {}
 
     globalForDb._db = db;

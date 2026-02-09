@@ -7,7 +7,7 @@ export function generateIcalFeed(events: Event[]): string {
     const start = new Date(event.start_date);
     const end = new Date(event.end_date);
     const seriesLabel = SERIES_CONFIG[event.series]?.label || '';
-    const locationParts = [event.location, event.city, event.address].filter(Boolean).join(', ');
+    const locationParts = [event.location, event.city, event.country, event.address].filter(Boolean).join(', ');
 
     return {
       title: seriesLabel ? `[${seriesLabel}] ${event.title}` : event.title,

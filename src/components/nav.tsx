@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Calendar, List, PlusCircle, Download } from 'lucide-react';
+import { Calendar, List, PlusCircle, Download, Flame } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const links = [
@@ -19,7 +19,10 @@ export function Nav() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center">
         <Link href="/" className="mr-6 flex items-center space-x-2 font-bold text-lg">
-          <span>Drift Calendar</span>
+          <Flame className="h-5 w-5 text-primary" />
+          <span className="bg-gradient-to-r from-primary to-orange-400 bg-clip-text text-transparent">
+            Drift Calendar
+          </span>
         </Link>
         <nav className="flex items-center space-x-1 text-sm">
           {links.map(({ href, label, icon: Icon }) => (

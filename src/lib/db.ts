@@ -23,6 +23,10 @@ function getDb(): Database.Database {
         title       TEXT NOT NULL,
         description TEXT,
         location    TEXT,
+        address     TEXT,
+        lat         REAL,
+        lng         REAL,
+        series      TEXT DEFAULT 'other',
         start_date  TEXT NOT NULL,
         end_date    TEXT NOT NULL,
         url         TEXT,
@@ -35,6 +39,7 @@ function getDb(): Database.Database {
         title           TEXT NOT NULL,
         description     TEXT,
         location        TEXT,
+        address         TEXT,
         start_date      TEXT NOT NULL,
         end_date        TEXT NOT NULL,
         url             TEXT,
@@ -44,6 +49,13 @@ function getDb(): Database.Database {
         created_at      TEXT DEFAULT (datetime('now'))
       );
     `);
+
+    // Migration: add columns if they don't exist (for existing DBs)
+    try { db.exec('ALTER TABLE events ADD COLUMN address TEXT'); } catch {}
+    try { db.exec('ALTER TABLE events ADD COLUMN lat REAL'); } catch {}
+    try { db.exec('ALTER TABLE events ADD COLUMN lng REAL'); } catch {}
+    try { db.exec('ALTER TABLE events ADD COLUMN series TEXT DEFAULT \'other\''); } catch {}
+    try { db.exec('ALTER TABLE submissions ADD COLUMN address TEXT'); } catch {}
 
     globalForDb._db = db;
   }

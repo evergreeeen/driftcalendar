@@ -23,7 +23,7 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json();
-  const { title, description, location, start_date, end_date, url } = body;
+  const { title, description, location, address, lat, lng, series, start_date, end_date, url } = body;
 
   if (!title || !start_date || !end_date) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -31,9 +31,9 @@ export async function POST(request: Request) {
 
   const db = getDb();
   const result = db.prepare(`
-    INSERT INTO events (title, description, location, start_date, end_date, url)
-    VALUES (?, ?, ?, ?, ?, ?)
-  `).run(title, description || null, location || null, start_date, end_date, url || null);
+    INSERT INTO events (title, description, location, address, lat, lng, series, start_date, end_date, url)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(title, description || null, location || null, address || null, lat || null, lng || null, series || 'other', start_date, end_date, url || null);
 
   return NextResponse.json({ id: result.lastInsertRowid }, { status: 201 });
 }

@@ -22,14 +22,14 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
   const { id } = await params;
   const body = await request.json();
-  const { title, description, location, start_date, end_date, url } = body;
+  const { title, description, location, address, lat, lng, series, start_date, end_date, url } = body;
 
   const db = getDb();
   db.prepare(`
     UPDATE events
-    SET title = ?, description = ?, location = ?, start_date = ?, end_date = ?, url = ?, updated_at = datetime('now')
+    SET title = ?, description = ?, location = ?, address = ?, lat = ?, lng = ?, series = ?, start_date = ?, end_date = ?, url = ?, updated_at = datetime('now')
     WHERE id = ?
-  `).run(title, description || null, location || null, start_date, end_date, url || null, id);
+  `).run(title, description || null, location || null, address || null, lat || null, lng || null, series || 'other', start_date, end_date, url || null, id);
 
   return NextResponse.json({ success: true });
 }

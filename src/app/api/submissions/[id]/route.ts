@@ -20,17 +20,17 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   const db = getDb();
   db.prepare('UPDATE submissions SET status = ? WHERE id = ?').run(status, id);
 
-  // If approved, copy to events table
   if (status === 'approved') {
     const submission = db.prepare('SELECT * FROM submissions WHERE id = ?').get(id) as Submission;
     if (submission) {
       db.prepare(`
-        INSERT INTO events (title, description, location, start_date, end_date, url)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO events (title, description, location, address, start_date, end_date, url)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
       `).run(
         submission.title,
         submission.description,
         submission.location,
+        submission.address,
         submission.start_date,
         submission.end_date,
         submission.url

@@ -5,7 +5,8 @@ import { seedDatabase } from '@/lib/seed';
 import type { Event } from '@/types';
 import { AdminEventsClient } from './events-client';
 import Link from 'next/link';
-import { FileText, LogOut } from 'lucide-react';
+import { FileText } from 'lucide-react';
+import { LogoutButton } from '@/components/logout-button';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,20 +39,7 @@ export default async function AdminPage() {
               </span>
             )}
           </Link>
-          <form action="/api/auth" method="DELETE">
-            <button
-              type="submit"
-              className="inline-flex items-center gap-1.5 rounded-md border px-3 py-2 text-sm hover:bg-accent"
-              onClick={async (e) => {
-                e.preventDefault();
-                await fetch('/api/auth', { method: 'DELETE' });
-                window.location.href = '/admin/login';
-              }}
-            >
-              <LogOut className="h-4 w-4" />
-              Выйти
-            </button>
-          </form>
+          <LogoutButton />
         </div>
       </div>
 

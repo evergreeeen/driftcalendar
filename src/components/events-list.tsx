@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { format, parseISO } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { EventCard } from '@/components/event-card';
-import { SeriesFilter } from '@/components/series-filter';
+import { EventFilters } from '@/components/event-filters';
 import type { Event, EventSeries } from '@/types';
 
 function groupEventsByMonth(events: Event[]): Map<string, Event[]> {
@@ -20,16 +20,44 @@ function groupEventsByMonth(events: Event[]): Map<string, Event[]> {
 
 export function EventsList({ events }: { events: Event[] }) {
   const [filterSeries, setFilterSeries] = useState<EventSeries[]>([]);
+  const [filterCities, setFilterCities] = useState<string[]>([]);
 
-  const filtered = filterSeries.length === 0
-    ? events
-    : events.filter((e) => filterSeries.includes(e.series));
+  const cities = useMemo(() => {
+    const set = new Set<string>();
+    events.forEach((e) => {
+      if (e.location) {
+        const city = e.location.split(',').pop()?.trim() || e.location;
+        set.add(city);
+      }
+    });
+    return Array.from(set).sort();
+  }, [events]);
+
+  const filtered = useMemo(() => {
+    let result = events;
+    if (filterSeries.length > 0) {
+      result = result.filter((e) => filterSeries.includes(e.series));
+    }
+    if (filterCities.length > 0) {
+      result = result.filter((e) => {
+        if (!e.location) return false;
+        return filterCities.some((city) => e.location!.includes(city));
+      });
+    }
+    return result;
+  }, [events, filterSeries, filterCities]);
 
   const grouped = groupEventsByMonth(filtered);
 
   return (
     <div className="space-y-6">
-      <SeriesFilter selected={filterSeries} onChange={setFilterSeries} />
+      <EventFilters
+        filterSeries={filterSeries}
+        onSeriesChange={setFilterSeries}
+        filterCities={filterCities}
+        onCitiesChange={setFilterCities}
+        cities={cities}
+      />
 
       {Array.from(grouped.entries()).map(([monthKey, monthEvents]) => (
         <div key={monthKey} className="space-y-3">

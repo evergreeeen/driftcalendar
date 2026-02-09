@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   startOfMonth,
   endOfMonth,
@@ -18,7 +18,7 @@ import {
 import { ru } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight, MapPin, Navigation } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { SeriesFilter } from '@/components/series-filter';
+import { EventFilters } from '@/components/event-filters';
 import { SERIES_CONFIG } from '@/types';
 import type { Event, EventSeries } from '@/types';
 
@@ -28,10 +28,32 @@ export function CalendarGrid({ events }: { events: Event[] }) {
   const [currentDate, setCurrentDate] = useState(new Date(2026, 3, 1));
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
   const [filterSeries, setFilterSeries] = useState<EventSeries[]>([]);
+  const [filterCities, setFilterCities] = useState<string[]>([]);
 
-  const filtered = filterSeries.length === 0
-    ? events
-    : events.filter((e) => filterSeries.includes(e.series));
+  const cities = useMemo(() => {
+    const set = new Set<string>();
+    events.forEach((e) => {
+      if (e.location) {
+        const city = e.location.split(',').pop()?.trim() || e.location;
+        set.add(city);
+      }
+    });
+    return Array.from(set).sort();
+  }, [events]);
+
+  const filtered = useMemo(() => {
+    let result = events;
+    if (filterSeries.length > 0) {
+      result = result.filter((e) => filterSeries.includes(e.series));
+    }
+    if (filterCities.length > 0) {
+      result = result.filter((e) => {
+        if (!e.location) return false;
+        return filterCities.some((city) => e.location!.includes(city));
+      });
+    }
+    return result;
+  }, [events, filterSeries, filterCities]);
 
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
@@ -53,7 +75,13 @@ export function CalendarGrid({ events }: { events: Event[] }) {
 
   return (
     <div className="space-y-4">
-      <SeriesFilter selected={filterSeries} onChange={setFilterSeries} />
+      <EventFilters
+        filterSeries={filterSeries}
+        onSeriesChange={setFilterSeries}
+        filterCities={filterCities}
+        onCitiesChange={setFilterCities}
+        cities={cities}
+      />
 
       <div className="flex items-center justify-between">
         <Button
@@ -94,31 +122,34 @@ export function CalendarGrid({ events }: { events: Event[] }) {
             <button
               key={day.toISOString()}
               onClick={() => setSelectedDay(isSelected ? null : day)}
-              className={`relative min-h-[70px] bg-card p-1.5 text-left transition-colors hover:bg-accent ${
-                !isCurrentMonth ? 'text-muted-foreground/30' : ''
+              className={`relative min-h-[90px] bg-card p-1 text-left transition-colors hover:bg-accent/50 ${
+                !isCurrentMonth ? 'opacity-30' : ''
               } ${isSelected ? 'ring-2 ring-primary ring-inset' : ''}`}
             >
               <span
-                className={`inline-flex h-6 w-6 items-center justify-center rounded-full text-xs ${
-                  isToday ? 'bg-primary text-primary-foreground font-bold' : ''
+                className={`inline-flex h-5 w-5 items-center justify-center rounded-full text-[11px] mb-0.5 ${
+                  isToday ? 'bg-primary text-primary-foreground font-bold' : 'text-muted-foreground'
                 }`}
               >
                 {format(day, 'd')}
               </span>
               {dayEvents.length > 0 && (
-                <div className="mt-0.5 flex flex-wrap gap-0.5">
+                <div className="flex flex-col gap-px">
                   {dayEvents.slice(0, 3).map((event) => {
                     const cfg = SERIES_CONFIG[event.series] || SERIES_CONFIG.other;
                     return (
-                      <span
+                      <div
                         key={event.id}
-                        className={`h-1.5 w-1.5 rounded-full ${cfg.dot}`}
-                        title={event.title}
-                      />
+                        className={`rounded px-1 py-px text-[9px] leading-tight font-medium truncate ${cfg.dot} text-white`}
+                        title={`${event.title} — ${event.location}`}
+                      >
+                        <span className="hidden sm:inline">{event.title}</span>
+                        <span className="sm:hidden">{(SERIES_CONFIG[event.series] || SERIES_CONFIG.other).label}</span>
+                      </div>
                     );
                   })}
                   {dayEvents.length > 3 && (
-                    <span className="text-[10px] text-muted-foreground">
+                    <span className="text-[9px] text-muted-foreground text-center">
                       +{dayEvents.length - 3}
                     </span>
                   )}
@@ -140,7 +171,7 @@ export function CalendarGrid({ events }: { events: Event[] }) {
               <div key={event.id} className="flex items-start gap-3 rounded-md border p-3 bg-card">
                 <span className={`mt-1.5 h-2.5 w-2.5 rounded-full flex-shrink-0 ${cfg.dot}`} />
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <p className="font-medium text-sm">{event.title}</p>
                     <span className={`rounded-full border px-2 py-0.5 text-[10px] font-medium ${cfg.color}`}>
                       {cfg.label}

@@ -21,11 +21,20 @@ function groupEventsByMonth(events: Event[]): Map<string, Event[]> {
 export function EventsList({ events }: { events: Event[] }) {
   const [filterSeries, setFilterSeries] = useState<EventSeries[]>([]);
   const [filterCities, setFilterCities] = useState<string[]>([]);
+  const [filterTracks, setFilterTracks] = useState<string[]>([]);
 
   const cities = useMemo(() => {
     const set = new Set<string>();
     events.forEach((e) => {
       if (e.city) set.add(e.city);
+    });
+    return Array.from(set).sort();
+  }, [events]);
+
+  const tracks = useMemo(() => {
+    const set = new Set<string>();
+    events.forEach((e) => {
+      if (e.location) set.add(e.location);
     });
     return Array.from(set).sort();
   }, [events]);
@@ -38,39 +47,51 @@ export function EventsList({ events }: { events: Event[] }) {
     if (filterCities.length > 0) {
       result = result.filter((e) => e.city && filterCities.includes(e.city));
     }
+    if (filterTracks.length > 0) {
+      result = result.filter((e) => e.location && filterTracks.includes(e.location));
+    }
     return result;
-  }, [events, filterSeries, filterCities]);
+  }, [events, filterSeries, filterCities, filterTracks]);
 
   const grouped = groupEventsByMonth(filtered);
 
   return (
-    <div className="space-y-6">
-      <EventFilters
-        filterSeries={filterSeries}
-        onSeriesChange={setFilterSeries}
-        filterCities={filterCities}
-        onCitiesChange={setFilterCities}
-        cities={cities}
-      />
-
-      {Array.from(grouped.entries()).map(([monthKey, monthEvents]) => (
-        <div key={monthKey} className="space-y-3">
-          <h2 className="text-lg font-semibold capitalize sticky top-14 bg-background/95 backdrop-blur py-2 z-10 border-b border-border/50">
-            {format(parseISO(`${monthKey}-01`), 'LLLL yyyy', { locale: ru })}
-          </h2>
-          <div className="grid gap-3">
-            {monthEvents.map((event) => (
-              <EventCard key={event.id} event={event} />
-            ))}
+    <div className="flex flex-col lg:flex-row gap-6">
+      <div className="flex-1 min-w-0 space-y-6">
+        {Array.from(grouped.entries()).map(([monthKey, monthEvents]) => (
+          <div key={monthKey} className="space-y-3">
+            <h2 className="text-lg font-semibold capitalize sticky top-14 bg-background/95 backdrop-blur py-2 z-10 border-b border-border/50">
+              {format(parseISO(`${monthKey}-01`), 'LLLL yyyy', { locale: ru })}
+            </h2>
+            <div className="grid gap-3">
+              {monthEvents.map((event) => (
+                <EventCard key={event.id} event={event} />
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
 
-      {filtered.length === 0 && (
-        <div className="text-center py-12 text-muted-foreground">
-          <p>Нет мероприятий по выбранным фильтрам</p>
+        {filtered.length === 0 && (
+          <div className="text-center py-12 text-muted-foreground">
+            <p>Нет мероприятий по выбранным фильтрам</p>
+          </div>
+        )}
+      </div>
+
+      <aside className="lg:w-60 shrink-0 order-first lg:order-last">
+        <div className="lg:sticky lg:top-20 rounded-lg border bg-card p-4">
+          <EventFilters
+            filterSeries={filterSeries}
+            onSeriesChange={setFilterSeries}
+            filterCities={filterCities}
+            onCitiesChange={setFilterCities}
+            cities={cities}
+            filterTracks={filterTracks}
+            onTracksChange={setFilterTracks}
+            tracks={tracks}
+          />
         </div>
-      )}
+      </aside>
     </div>
   );
 }

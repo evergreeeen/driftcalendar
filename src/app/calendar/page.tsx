@@ -13,7 +13,7 @@ export default function CalendarPage() {
     .all() as Event[];
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Календарь</h1>
         <p className="text-muted-foreground">Все мероприятия в формате календаря</p>

@@ -15,9 +15,9 @@ interface SeedEvent {
 
 // Venues: location = track name, city = city/region
 const CTVS = { location: 'ЦТВС', city: 'Москва', address: 'Москва, Проектируемый проезд 4386, д. 1, р-н Печатники', lat: 55.65166, lng: 37.68895 };
-const MYACHKOVO = { location: 'ADM Raceway', city: 'Мячково', address: 'МО, Раменский р-н, д. Верхнее Мячково, аэродром', lat: 55.5666, lng: 37.9954 };
+const MYACHKOVO = { location: 'ADM Raceway', city: 'МО', address: 'МО, Раменский р-н, д. Верхнее Мячково, аэродром', lat: 55.5666, lng: 37.9954 };
 const IGORA = { location: 'Igora Drive', city: 'Санкт-Петербург', address: 'Ленинградская обл., Приозерское ш., д. 3, к. 2', lat: 60.5144, lng: 30.1942 };
-const MRW = { location: 'Moscow Raceway', city: 'Волоколамск', address: 'МО, Волоколамский р-н, д. Шелудьково, 39', lat: 55.9955, lng: 36.2700 };
+const MRW = { location: 'Moscow Raceway', city: 'МО', address: 'МО, Волоколамский р-н, д. Шелудьково, 39', lat: 55.9955, lng: 36.2700 };
 const ATRON = { location: 'ATRON International Circuit', city: 'Рязань', address: 'Рязанская обл., д. Секиотово, ул. Мирная, 2', lat: 54.5891, lng: 39.6198 };
 const KAZAN = { location: 'KazanRing Canyon', city: 'Казань', address: 'Татарстан, трасса М7, 817 км, Высокогорский р-н', lat: 55.8664, lng: 49.2597 };
 const NRING = { location: 'NRing', city: 'Нижний Новгород', address: 'Нижегородская обл., Богородский р-н, АСК НН Кольцо', lat: 56.123, lng: 43.598 };

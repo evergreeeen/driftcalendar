@@ -2,7 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import { SERIES_CONFIG, type EventSeries } from '@/types';
-import { MapPin, Filter } from 'lucide-react';
+import { MapPin, Filter, Flag } from 'lucide-react';
 
 const ALL_SERIES = Object.keys(SERIES_CONFIG) as EventSeries[];
 
@@ -12,6 +12,9 @@ interface EventFiltersProps {
   filterCities: string[];
   onCitiesChange: (cities: string[]) => void;
   cities: string[];
+  filterTracks: string[];
+  onTracksChange: (tracks: string[]) => void;
+  tracks: string[];
 }
 
 export function EventFilters({
@@ -20,9 +23,13 @@ export function EventFilters({
   filterCities,
   onCitiesChange,
   cities,
+  filterTracks,
+  onTracksChange,
+  tracks,
 }: EventFiltersProps) {
   const allSeriesSelected = filterSeries.length === 0;
   const allCitiesSelected = filterCities.length === 0;
+  const allTracksSelected = filterTracks.length === 0;
 
   function toggleSeries(series: EventSeries) {
     if (filterSeries.includes(series)) {
@@ -40,11 +47,21 @@ export function EventFilters({
     }
   }
 
+  function toggleTrack(track: string) {
+    if (filterTracks.includes(track)) {
+      onTracksChange(filterTracks.filter((t) => t !== track));
+    } else {
+      onTracksChange([...filterTracks, track]);
+    }
+  }
+
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
+      <h3 className="font-semibold text-sm">Фильтры</h3>
+
       {/* Series filter */}
-      <div className="space-y-1.5">
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+      <div className="space-y-2">
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
           <Filter className="h-3 w-3" />
           <span>Серия</span>
         </div>
@@ -80,8 +97,8 @@ export function EventFilters({
       </div>
 
       {/* City filter */}
-      <div className="space-y-1.5">
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+      <div className="space-y-2">
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
           <MapPin className="h-3 w-3" />
           <span>Город</span>
         </div>
@@ -111,6 +128,44 @@ export function EventFilters({
                 )}
               >
                 {city}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Track filter */}
+      <div className="space-y-2">
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
+          <Flag className="h-3 w-3" />
+          <span>Трасса</span>
+        </div>
+        <div className="flex flex-wrap gap-1.5">
+          <button
+            onClick={() => onTracksChange([])}
+            className={cn(
+              'rounded-full border px-2.5 py-1 text-xs font-medium transition-colors',
+              allTracksSelected
+                ? 'border-primary/50 bg-primary/10 text-primary'
+                : 'border-border text-muted-foreground hover:bg-accent'
+            )}
+          >
+            Все
+          </button>
+          {tracks.map((track) => {
+            const isActive = filterTracks.includes(track);
+            return (
+              <button
+                key={track}
+                onClick={() => toggleTrack(track)}
+                className={cn(
+                  'rounded-full border px-2.5 py-1 text-xs font-medium transition-colors',
+                  isActive
+                    ? 'border-primary/50 bg-primary/10 text-primary'
+                    : 'border-border text-muted-foreground hover:bg-accent'
+                )}
+              >
+                {track}
               </button>
             );
           })}

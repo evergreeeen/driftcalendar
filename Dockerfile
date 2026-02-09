@@ -27,8 +27,9 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Create data directory for SQLite
+# Create data directories for SQLite (both /data for volume mount and /app/data as fallback)
 RUN mkdir -p /data && chown nextjs:nodejs /data
+RUN mkdir -p /app/data && chown nextjs:nodejs /app/data
 
 USER nextjs
 

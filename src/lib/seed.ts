@@ -23,6 +23,8 @@ const KAZAN = { location: 'KazanRing Canyon', city: 'Казань', address: 'Т
 const NRING = { location: 'NRing', city: 'Нижний Новгород', address: 'Нижегородская обл., Богородский р-н, АСК НН Кольцо', lat: 56.123, lng: 43.598 };
 const REDRING = { location: 'Красное Кольцо', city: 'Красноярск', address: 'Красноярский край, Емельяновский р-н, трасса Р255', lat: 56.1261, lng: 92.7397 };
 const ROSTOV = { location: 'Ростов Арена', city: 'Ростов-на-Дону', address: 'г. Ростов-на-Дону, ул. Левобережная, 2Б', lat: 47.2094, lng: 39.7378 };
+const SHANGHAI = { location: 'TBA', city: 'Шанхай', address: 'Shanghai, China', lat: 31.2304, lng: 121.4737 };
+const CHINA_TBA = { location: 'TBA', city: 'Китай', address: 'China, TBA', lat: 35.8617, lng: 104.1954 };
 
 const events: SeedEvent[] = [
   // Апрель
@@ -58,6 +60,12 @@ const events: SeedEvent[] = [
   { title: '6 этап САТЮКАП', series: 'satyukap', ...CTVS, start_date: '2026-09-18T09:00:00', end_date: '2026-09-19T20:00:00' },
   { title: '4-й этап АДМ дрифт контест', series: 'adm', ...MYACHKOVO, start_date: '2026-09-25T09:00:00', end_date: '2026-09-26T20:00:00' },
   { title: 'СУПЕРКУБОК RDS', series: 'supercup', ...ROSTOV, start_date: '2026-09-26T09:00:00', end_date: '2026-09-27T20:00:00' },
+  // Royal Drift Series
+  { title: 'Royal Drift Series — Round 1', series: 'royal_drift', ...SHANGHAI, start_date: '2026-06-06T09:00:00', end_date: '2026-06-07T20:00:00' },
+  { title: 'Royal Drift Series — Round 2', series: 'royal_drift', ...CHINA_TBA, start_date: '2026-07-04T09:00:00', end_date: '2026-07-05T20:00:00' },
+  { title: 'Royal Drift Series — Round 3', series: 'royal_drift', ...CHINA_TBA, start_date: '2026-09-05T09:00:00', end_date: '2026-09-06T20:00:00' },
+  { title: 'Royal Drift Series — Round 4', series: 'royal_drift', ...SHANGHAI, start_date: '2026-10-10T09:00:00', end_date: '2026-10-11T20:00:00' },
+  { title: 'Royal Drift Series — Round 5', series: 'royal_drift', ...SHANGHAI, start_date: '2026-10-30T09:00:00', end_date: '2026-10-31T20:00:00' },
 ];
 
 export function seedDatabase() {

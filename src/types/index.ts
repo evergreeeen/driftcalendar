@@ -1,4 +1,4 @@
-export type EventSeries = 'rds_gp' | 'rds_open' | 'rds_fest' | 'satyukap' | 'adm' | 'driftexpo' | 'supercup' | 'other';
+export type EventSeries = 'rds_gp' | 'rds_open' | 'rds_fest' | 'satyukap' | 'adm' | 'driftexpo' | 'supercup' | 'royal_drift' | 'other';
 
 export interface Event {
   id: number;
@@ -40,5 +40,6 @@ export const SERIES_CONFIG: Record<EventSeries, { label: string; color: string; 
   adm: { label: 'АДМ', color: 'bg-green-500/20 text-green-400 border-green-500/30', dot: 'bg-green-500' },
   driftexpo: { label: 'ДРИФТЭКСПО', color: 'bg-purple-500/20 text-purple-400 border-purple-500/30', dot: 'bg-purple-500' },
   supercup: { label: 'СУПЕРКУБОК', color: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30', dot: 'bg-yellow-500' },
+  royal_drift: { label: 'Royal Drift', color: 'bg-amber-500/20 text-amber-400 border-amber-500/30', dot: 'bg-amber-500' },
   other: { label: 'Другое', color: 'bg-zinc-500/20 text-zinc-400 border-zinc-500/30', dot: 'bg-zinc-500' },
 };

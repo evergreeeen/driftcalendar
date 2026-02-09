@@ -1,0 +1,225 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { format, parseISO } from 'date-fns';
+import { ru } from 'date-fns/locale';
+import { Plus, Pencil, Trash2, X, Save, MapPin, Calendar } from 'lucide-react';
+import type { Event } from '@/types';
+
+interface EventFormData {
+  title: string;
+  description: string;
+  location: string;
+  start_date: string;
+  end_date: string;
+  url: string;
+}
+
+const emptyForm: EventFormData = {
+  title: '',
+  description: '',
+  location: '',
+  start_date: '',
+  end_date: '',
+  url: '',
+};
+
+export function AdminEventsClient({ initialEvents }: { initialEvents: Event[] }) {
+  const router = useRouter();
+  const [events, setEvents] = useState(initialEvents);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [creating, setCreating] = useState(false);
+  const [form, setForm] = useState<EventFormData>(emptyForm);
+  const [loading, setLoading] = useState(false);
+
+  function startEdit(event: Event) {
+    setEditingId(event.id);
+    setCreating(false);
+    setForm({
+      title: event.title,
+      description: event.description || '',
+      location: event.location || '',
+      start_date: event.start_date.slice(0, 16),
+      end_date: event.end_date.slice(0, 16),
+      url: event.url || '',
+    });
+  }
+
+  function startCreate() {
+    setCreating(true);
+    setEditingId(null);
+    setForm(emptyForm);
+  }
+
+  function cancel() {
+    setCreating(false);
+    setEditingId(null);
+    setForm(emptyForm);
+  }
+
+  async function saveEvent() {
+    setLoading(true);
+    try {
+      if (creating) {
+        const res = await fetch('/api/events', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(form),
+        });
+        if (!res.ok) throw new Error('Failed to create');
+      } else if (editingId) {
+        const res = await fetch(`/api/events/${editingId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(form),
+        });
+        if (!res.ok) throw new Error('Failed to update');
+      }
+      cancel();
+      router.refresh();
+      // Refetch
+      const res = await fetch('/api/events?all=true');
+      const data = await res.json();
+      setEvents(data);
+    } catch {
+      alert('Ошибка сохранения');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function deleteEvent(id: number) {
+    if (!confirm('Удалить мероприятие?')) return;
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/events/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete');
+      setEvents(events.filter((e) => e.id !== id));
+    } catch {
+      alert('Ошибка удаления');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-end">
+        <Button onClick={startCreate} className="gap-1.5" disabled={creating}>
+          <Plus className="h-4 w-4" />
+          Добавить
+        </Button>
+      </div>
+
+      {(creating || editingId) && (
+        <div className="rounded-lg border bg-card p-4 space-y-4">
+          <h3 className="font-semibold">{creating ? 'Новое мероприятие' : 'Редактирование'}</h3>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2 sm:col-span-2">
+              <label className="text-sm font-medium">Название *</label>
+              <Input
+                value={form.title}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
+                placeholder="Название мероприятия"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Место</label>
+              <Input
+                value={form.location}
+                onChange={(e) => setForm({ ...form, location: e.target.value })}
+                placeholder="Место проведения"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Ссылка</label>
+              <Input
+                value={form.url}
+                onChange={(e) => setForm({ ...form, url: e.target.value })}
+                placeholder="https://..."
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Начало *</label>
+              <Input
+                type="datetime-local"
+                value={form.start_date}
+                onChange={(e) => setForm({ ...form, start_date: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Окончание *</label>
+              <Input
+                type="datetime-local"
+                value={form.end_date}
+                onChange={(e) => setForm({ ...form, end_date: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2 sm:col-span-2">
+              <label className="text-sm font-medium">Описание</label>
+              <Textarea
+                value={form.description}
+                onChange={(e) => setForm({ ...form, description: e.target.value })}
+                placeholder="Описание"
+              />
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <Button onClick={saveEvent} disabled={loading || !form.title || !form.start_date || !form.end_date} className="gap-1.5">
+              <Save className="h-4 w-4" />
+              {loading ? 'Сохранение...' : 'Сохранить'}
+            </Button>
+            <Button variant="outline" onClick={cancel}>
+              <X className="h-4 w-4 mr-1.5" />
+              Отмена
+            </Button>
+          </div>
+        </div>
+      )}
+
+      <div className="rounded-lg border">
+        <div className="grid grid-cols-[1fr_auto_auto_auto] gap-4 p-3 text-sm font-medium text-muted-foreground border-b bg-muted/50">
+          <span>Мероприятие</span>
+          <span>Место</span>
+          <span>Даты</span>
+          <span></span>
+        </div>
+        {events.map((event) => (
+          <div
+            key={event.id}
+            className="grid grid-cols-[1fr_auto_auto_auto] gap-4 p-3 text-sm items-center border-b last:border-b-0 hover:bg-accent/50"
+          >
+            <span className="font-medium">{event.title}</span>
+            <span className="text-muted-foreground flex items-center gap-1">
+              <MapPin className="h-3 w-3" />
+              {event.location || '—'}
+            </span>
+            <span className="text-muted-foreground flex items-center gap-1 whitespace-nowrap">
+              <Calendar className="h-3 w-3" />
+              {format(parseISO(event.start_date), 'd MMM', { locale: ru })}
+              {' - '}
+              {format(parseISO(event.end_date), 'd MMM', { locale: ru })}
+            </span>
+            <div className="flex gap-1">
+              <Button variant="ghost" size="icon" onClick={() => startEdit(event)} className="h-8 w-8">
+                <Pencil className="h-3.5 w-3.5" />
+              </Button>
+              <Button variant="ghost" size="icon" onClick={() => deleteEvent(event.id)} className="h-8 w-8 text-destructive hover:text-destructive">
+                <Trash2 className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+          </div>
+        ))}
+        {events.length === 0 && (
+          <div className="p-6 text-center text-muted-foreground">
+            Нет мероприятий
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

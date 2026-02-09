@@ -45,6 +45,9 @@ const BIKERNIEKI = { location: 'Bikernieki Circuit', city: 'Рига', country: 
 const FERROPOLIS = { location: 'Ferropolis', city: 'Дессау', country: 'Германия', address: 'Ferropolisstraße 1, 06773 Gräfenhainichen, Germany', lat: 51.7178, lng: 12.4544 };
 const PGE_NARODOWY = { location: 'PGE Narodowy', city: 'Варшава', country: 'Польша', address: 'al. Ks. J. Poniatowskiego 1, 03-901 Warszawa, Poland', lat: 52.2396, lng: 21.0453 };
 
+// SDC venue (Krasnodar region)
+const STK_PILOT = { location: 'СТК Пилот', city: 'Усть-Лабинск', country: 'Россия', address: 'Краснодарский край, г. Усть-Лабинск, ул. Демьяна Бедного, 1Г', lat: 45.2182, lng: 39.6382 };
+
 // Formula DRIFT venues (USA)
 const LONG_BEACH = { location: 'Streets of Long Beach', city: 'Лонг-Бич', country: 'США', address: 'E Shoreline Dr, Long Beach, CA 90802, USA', lat: 33.7641, lng: -118.1898 };
 const ROAD_ATLANTA = { location: 'Road Atlanta', city: 'Атланта', country: 'США', address: '5300 Winder Hwy, Braselton, GA 30517, USA', lat: 34.1466, lng: -83.8125 };
@@ -119,6 +122,11 @@ const events: SeedEvent[] = [
   { title: 'Formula DRIFT — Round 6', series: 'formula_drift', ...EVERGREEN, start_date: '2026-08-21T09:00:00', end_date: '2026-08-22T20:00:00' },
   { title: 'Formula DRIFT — Round 7', series: 'formula_drift', ...LVMS, start_date: '2026-09-24T09:00:00', end_date: '2026-09-26T20:00:00' },
   { title: 'Formula DRIFT — Round 8 (Finals)', series: 'formula_drift', ...LONG_BEACH, start_date: '2026-10-23T09:00:00', end_date: '2026-10-24T20:00:00' },
+  // Systeme Electric Drift Challenge (SDC)
+  { title: 'SDC — Этап 1', series: 'sdc', ...STK_PILOT, start_date: '2025-11-05T09:00:00', end_date: '2025-11-09T20:00:00' },
+  { title: 'SDC — Этап 2', series: 'sdc', ...STK_PILOT, start_date: '2025-11-12T09:00:00', end_date: '2025-11-16T20:00:00' },
+  { title: 'SDC — Этап 3', series: 'sdc', ...STK_PILOT, start_date: '2026-03-18T09:00:00', end_date: '2026-03-22T20:00:00' },
+  { title: 'SDC — Этап 4', series: 'sdc', ...STK_PILOT, start_date: '2026-03-25T09:00:00', end_date: '2026-03-29T20:00:00' },
 ];
 
 export function seedDatabase() {

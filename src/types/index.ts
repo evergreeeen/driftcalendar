@@ -1,4 +1,4 @@
-export type EventSeries = 'rds' | 'satyukap' | 'adm' | 'driftexpo' | 'supercup' | 'royal_drift' | 'd1gp' | 'drift_masters' | 'formula_drift' | 'other';
+export type EventSeries = 'rds' | 'sdc' | 'satyukap' | 'adm' | 'driftexpo' | 'supercup' | 'royal_drift' | 'd1gp' | 'drift_masters' | 'formula_drift' | 'other';
 
 export interface Event {
   id: number;
@@ -35,6 +35,7 @@ export interface Submission {
 
 export const SERIES_CONFIG: Record<EventSeries, { label: string; color: string; dot: string }> = {
   rds: { label: 'RDS', color: 'bg-red-500/20 text-red-400 border-red-500/30', dot: 'bg-red-500' },
+  sdc: { label: 'SDC', color: 'bg-teal-500/20 text-teal-400 border-teal-500/30', dot: 'bg-teal-500' },
   satyukap: { label: 'САТЮКАП', color: 'bg-blue-500/20 text-blue-400 border-blue-500/30', dot: 'bg-blue-500' },
   adm: { label: 'АДМ', color: 'bg-green-500/20 text-green-400 border-green-500/30', dot: 'bg-green-500' },
   driftexpo: { label: 'ДРИФТЭКСПО', color: 'bg-purple-500/20 text-purple-400 border-purple-500/30', dot: 'bg-purple-500' },
